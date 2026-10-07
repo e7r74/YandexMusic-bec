@@ -59,4 +59,14 @@ public class TrackController {
         }
     }
 
+    @PostMapping("/{id}/play")
+    public ResponseEntity<?> playCount(@PathVariable Long id){
+        TrackDto trackDtoCount = trackService.incrementPlayCount(id);
+       return new ResponseEntity<>(trackDtoCount, HttpStatus.OK);
+    }
+    @GetMapping("/popular")
+    public List<TrackDto> popularTrack(){
+        return trackService.popularTrack();
+    }
+
 }

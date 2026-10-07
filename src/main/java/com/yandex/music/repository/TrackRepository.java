@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface TrackRepository extends JpaRepository<Track,Long> {
     List<Track> findByArtistId(Long artistId);
+    List<Track> findTop10ByOrderByPopularTrackDesc();
+    
+
 }

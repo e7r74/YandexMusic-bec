@@ -10,4 +10,6 @@ public interface TrackService {
     List<TrackDto> getTrackByArtist(Long artistId);
     TrackDto addTrack(TrackDto trackDto);
     boolean deleteTrack(Long id);
+    TrackDto incrementPlayCount(Long id);
+    List<TrackDto> popularTrack();
 }

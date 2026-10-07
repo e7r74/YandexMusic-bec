@@ -3,6 +3,8 @@ package com.yandex.music.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -19,8 +21,11 @@ public class Track {
     private String durationInSeconds;
     @Column(name = "url_music", nullable = false)
     private String urlMusic;
+    @Column(name = "popular_track")
+    private Long popularTrack=0L;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="artist_id", nullable = false)
     private Artist artist;
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Genre> genres;
 }
