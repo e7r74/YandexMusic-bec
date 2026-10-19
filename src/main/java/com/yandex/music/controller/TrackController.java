@@ -5,6 +5,7 @@ import com.yandex.music.service.TrackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,7 @@ public class TrackController {
         }
     }
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ROLE_ARTIST') or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> addTrack(@RequestBody TrackDto trackDto){
         TrackDto createTrack= trackService.addTrack(trackDto);
         if (Objects.isNull(createTrack)){
@@ -50,6 +52,7 @@ public class TrackController {
         }
     }
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ARTIST')")
     public ResponseEntity<?> deleteTrack(@PathVariable Long id){
         boolean deleteTrack= trackService.deleteTrack(id);
         if (deleteTrack){

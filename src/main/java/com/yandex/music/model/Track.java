@@ -17,8 +17,8 @@ public class Track {
     private Long id;
     @Column(nullable = false)
     private String title;
-    @Column(name = "duration")
-    private String durationInSeconds;
+    @Column(name = "photo_url")
+    private String photoUrl;
     @Column(name = "url_music", nullable = false)
     private String urlMusic;
     @Column(name = "popular_track")

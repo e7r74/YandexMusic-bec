@@ -3,7 +3,9 @@ package com.yandex.music.service.impl;
 import com.yandex.music.dto.ArtistDto;
 import com.yandex.music.mappers.ArtistMapper;
 import com.yandex.music.model.Artist;
+import com.yandex.music.model.auth.Users;
 import com.yandex.music.repository.ArtistRepository;
+import com.yandex.music.repository.UsersRepository;
 import com.yandex.music.service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.List;
 public class ArtistImpl implements ArtistService {
     private final ArtistRepository artistRepository;
     private final ArtistMapper artistMapper;
+    private final UsersRepository usersRepository;
 
     @Override
     public List<ArtistDto> getAllArtist() {
@@ -32,7 +35,12 @@ public class ArtistImpl implements ArtistService {
 
     @Override
     public ArtistDto addArtist(ArtistDto artistDto) {
+        Users user= null;
+        if (artistDto.getUserId()!=null){
+            user= usersRepository.findById(artistDto.getUserId()).orElse(null);
+        }
         Artist artist=artistMapper.toEntity(artistDto);
+        artist.setUser(user);
         artistRepository.save(artist);
         ArtistDto artistDto2=artistMapper.toDto(artist);
         return artistDto2;
@@ -40,10 +48,15 @@ public class ArtistImpl implements ArtistService {
 
     @Override
     public ArtistDto updateArtist(Long id, ArtistDto artistDto) {
+        Users user= null;
+        if (artistDto.getUserId()!=null){
+            user= usersRepository.findById(artistDto.getUserId()).orElse(null);
+        }
        Artist artist= checkArtist(id);
        if (artist!=null){
            artist.setName(artistDto.getArtistName());
            artist.setPhotoUrl(artistDto.getArtistPhotoUrl());
+           artist.setUser(user);
            artistRepository.save(artist);
            return artistMapper.toDto(artist);
        }

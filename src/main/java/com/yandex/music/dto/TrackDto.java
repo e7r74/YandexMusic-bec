@@ -12,11 +12,10 @@ import java.util.List;
 public class TrackDto {
     private Long id;
     private String title;
-    private String durationInSeconds;
+    private String trackPhotoUrl;
     private String urlMusic;
     private Long popularTrack;
-    private Long artistId;
-    private String artistName;
+    private Artist artist;
     private List<Long> genreIds;
     private List<String> genreNames;
 

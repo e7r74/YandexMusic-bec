@@ -5,6 +5,7 @@ import com.yandex.music.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/genre")
+@CrossOrigin(origins = "http://localhost:5173")
 public class GenreController {
     private final GenreService genreService;
 
@@ -35,6 +37,7 @@ public class GenreController {
         }
     }
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> addGenre(@RequestBody GenreDto genreDto){
         GenreDto createGenre=genreService.addGenre(genreDto);
        if (Objects.isNull(createGenre)) {
@@ -45,6 +48,7 @@ public class GenreController {
    }
 
    @PutMapping("/update/{id}")
+   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> updateGenre(@PathVariable Long id,
                                          @RequestBody GenreDto genreDto){
         GenreDto updateGenre=genreService.updateGenre(id, genreDto);
@@ -55,6 +59,7 @@ public class GenreController {
         }
    }
    @DeleteMapping("/delete/{id}")
+   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> deleteGenre(@PathVariable Long id){
         boolean genre= genreService.deleteGenre(id);
         if (genre){

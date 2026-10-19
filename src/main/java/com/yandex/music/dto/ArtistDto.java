@@ -14,5 +14,6 @@ public class ArtistDto {
     private Long id;
     private String artistName;
     private String artistPhotoUrl;
+    private Long userId;
 }
 

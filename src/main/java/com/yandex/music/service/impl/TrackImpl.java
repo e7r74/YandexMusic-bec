@@ -5,11 +5,15 @@ import com.yandex.music.mappers.TrackMapper;
 import com.yandex.music.model.Artist;
 import com.yandex.music.model.Genre;
 import com.yandex.music.model.Track;
+import com.yandex.music.model.auth.Users;
 import com.yandex.music.repository.ArtistRepository;
 import com.yandex.music.repository.GenreRepository;
 import com.yandex.music.repository.TrackRepository;
 import com.yandex.music.service.TrackService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,14 +52,22 @@ public class TrackImpl implements TrackService {
 
     @Override
     public TrackDto addTrack(TrackDto trackDto) {
-        Artist artist= artistRepository.findById(trackDto.getArtistId()).orElse(null);
+        Users currentUser= getCurrentUser();
+        if (currentUser==null){
+            throw new RuntimeException("You are not logged in!");
+        }
+        Artist artist= artistRepository.findByUser(currentUser);
+        if (artist==null){
+            throw new RuntimeException("The current user does not have an artist profile!");
+        }
+
         List<Genre> genres= new ArrayList<>();
         if (trackDto.getGenreIds()!=null){
             genres= genreRepository.findAllById(trackDto.getGenreIds());
         }
         Track track= Track.builder()
                 .title(trackDto.getTitle())
-                .durationInSeconds(trackDto.getDurationInSeconds())
+                .photoUrl(trackDto.getTrackPhotoUrl())
                 .urlMusic(trackDto.getUrlMusic())
                 .artist(artist)
                 .popularTrack(0l)
@@ -91,6 +103,13 @@ public class TrackImpl implements TrackService {
     public List<TrackDto> popularTrack() {
         List<Track> tracks=trackRepository.findTop10ByOrderByPopularTrackDesc();
         return trackMapper.tracksDto(tracks);
+    }
+    private Users getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            return (Users) authentication.getPrincipal();
+        }
+        return null;
     }
 
 

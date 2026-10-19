@@ -6,6 +6,7 @@ import com.yandex.music.service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,11 +36,13 @@ public class ArtistController {
         }
     }
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> addArtist(@RequestBody ArtistDto artistDto){
         ArtistDto artistDto2= artistService.addArtist(artistDto);
        return new ResponseEntity<>(artistDto2,HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> updateArtist(@PathVariable("id") Long id,
                                           @RequestBody ArtistDto artistDto){
         ArtistDto newArtist=artistService.updateArtist(id,artistDto);
@@ -50,7 +53,8 @@ public class ArtistController {
         }
     }
     @DeleteMapping("/delete/{id}")
-    private ResponseEntity<?> deleteArtist(@PathVariable("id") Long id){
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<?> deleteArtist(@PathVariable("id") Long id){
        boolean artist= artistService.deleteArtist(id);
        if (artist){
            return new ResponseEntity<>(HttpStatus.ACCEPTED);

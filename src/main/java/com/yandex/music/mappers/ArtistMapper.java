@@ -12,10 +12,12 @@ public interface ArtistMapper {
 
     @Mapping(source = "name", target="artistName")
     @Mapping(source = "photoUrl", target = "artistPhotoUrl")
+    @Mapping(source="user.id", target = "userId")
     ArtistDto toDto(Artist artist);
 
     @Mapping(source = "artistName", target = "name")
     @Mapping(source = "artistPhotoUrl", target = "photoUrl")
+    @Mapping(source = "userId", target = "user.id")
     Artist toEntity(ArtistDto artistDto);
 
     List<ArtistDto> toDtoList(List<Artist> artists);
